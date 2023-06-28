@@ -68,4 +68,10 @@ test('blog likes property defaults to 0', async () => {
   expect(addedBlog.likes).toBe(0);
 });
 
+test('returns 400 status when title or url is missing from request', async () => {
+  const blogMissingData = { ...helper.dummyBlog, title: null, url: null };
+
+  await api.post('/api/blogs').send(blogMissingData).expect(400);
+});
+
 afterAll(() => mongoose.connection.close());

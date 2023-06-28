@@ -7,12 +7,15 @@ blogsRouter.get('/', async (req, res) => {
 });
 
 blogsRouter.post('/', async (req, res) => {
-  const { title, name, author, url, likes } = req.body;
+  const { title, author, url, likes } = req.body;
+
+  if (!title || !url) {
+    res.status(400).json({ error: 'Title and url required to post' });
+  }
 
   const blog = new Blog({
     title,
-    name,
-    author,
+    author: author || 'anonymous',
     url,
     likes: likes || 0,
   });
