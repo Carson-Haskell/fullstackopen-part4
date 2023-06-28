@@ -3,6 +3,7 @@ const {
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 } = require('../utils/list_helper');
 
 const listWithOneBlog = [
@@ -109,14 +110,13 @@ describe('most liked', () => {
 
 describe('author with most blog posts', () => {
   test('of empty list returns "no blogs"', () => {
-    expect(favoriteBlog([])).toBe('no blogs');
+    expect(mostBlogs([])).toBe('no blogs');
   });
 
   test('when list has only one blog returns that', () => {
-    expect(favoriteBlog(listWithOneBlog)).toEqual({
-      title: 'Go To Statement Considered Harmful',
+    expect(mostBlogs(listWithOneBlog)).toEqual({
       author: 'Edsger W. Dijkstra',
-      likes: 5,
+      blogs: 1,
     });
   });
 
@@ -124,6 +124,26 @@ describe('author with most blog posts', () => {
     expect(mostBlogs(blogs)).toEqual({
       author: 'Robert C. Martin',
       blogs: 3,
+    });
+  });
+});
+
+describe('author with most likes', () => {
+  test('of empty list returns "no blogs"', () => {
+    expect(mostLikes([])).toBe('no blogs');
+  });
+
+  test('when list has only one blog returns that', () => {
+    expect(mostLikes(listWithOneBlog)).toEqual({
+      author: 'Edsger W. Dijkstra',
+      likes: 5,
+    });
+  });
+
+  test('of a bigger list returns right', () => {
+    expect(mostLikes(blogs)).toEqual({
+      author: 'Edsger W. Dijkstra',
+      likes: 17,
     });
   });
 });
