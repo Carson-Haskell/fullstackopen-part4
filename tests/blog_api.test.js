@@ -36,16 +36,9 @@ test('blogs are uniquely indentiifed with id', async () => {
 });
 
 test('a valid blog can be added', async () => {
-  const newBlog = {
-    title: 'A Test Blog',
-    author: 'Mr. Test',
-    url: 'www.test.com',
-    likes: 0,
-  };
-
   await api
     .post('/api/blogs')
-    .send(newBlog)
+    .send(helper.dummyBlog)
     .expect(201)
     .expect('Content-Type', /application\/json/);
 
@@ -53,10 +46,26 @@ test('a valid blog can be added', async () => {
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
 
   const addedBlog = blogsAtEnd.at(-1);
-  expect(addedBlog.title).toBe(newBlog.title);
-  expect(addedBlog.author).toBe(newBlog.author);
-  expect(addedBlog.url).toBe(newBlog.url);
-  expect(addedBlog.likes).toBe(newBlog.likes);
+  expect(addedBlog.title).toBe(helper.dummyBlog.title);
+  expect(addedBlog.author).toBe(helper.dummyBlog.author);
+  expect(addedBlog.url).toBe(helper.dummyBlog.url);
+  expect(addedBlog.likes).toBe(helper.dummyBlog.likes);
+});
+
+test('blog likes property defaults to 0', async () => {
+  const blogWithoutLikes = { ...helper.dummyBlog, likes: null };
+
+  await api
+    .post('/api/blogs')
+    .send(blogWithoutLikes)
+    .expect(201)
+    .expect('Content-Type', /application\/json/);
+
+  const blogsAtEnd = await helper.blogsInDb();
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
+
+  const addedBlog = blogsAtEnd.at(-1);
+  expect(addedBlog.likes).toBe(0);
 });
 
 afterAll(() => mongoose.connection.close());
