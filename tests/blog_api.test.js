@@ -29,4 +29,10 @@ test('all notes are returned', async () => {
   expect(response.body).toHaveLength(helper.initialBlogs.length);
 });
 
+test('notes are uniquely indentiifed with id', async () => {
+  const storedBlogs = await helper.blogsInDb();
+
+  expect(storedBlogs[0].id).toBeDefined();
+});
+
 afterAll(() => mongoose.connection.close());
