@@ -1,0 +1,16 @@
+// GET ALL BLOGS
+GET http://localhost:3003/api/blogs 
+Content-Type: application/json
+//
+
+###
+// CREATE NEW BLOG
+POST http://localhost:3003/api/blogs 
+Content-Type: application/json
+
+{
+  "url": "test.com",
+  "title": "Adding to a User 2",
+  "author": "Carson Haskell",
+  "userId": "649f0c4d2c833dce5c7872a3" 
+}
