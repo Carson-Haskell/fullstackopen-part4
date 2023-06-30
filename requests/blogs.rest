@@ -7,10 +7,10 @@ Content-Type: application/json
 // CREATE NEW BLOG
 POST http://localhost:3003/api/blogs 
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNhcnNvbmhhcyIsImlkIjoiNjQ5ZjBjNGQyYzgzM2RjZTVjNzg3MmEzIiwiaWF0IjoxNjg4MTU1MjQxfQ.hUPTMSbbSLt4i8PI3Vxllg3O7gAtX-x6b95JDjLVM5g
 
 {
   "url": "test.com",
-  "title": "Adding to a User 2",
-  "author": "Carson Haskell",
-  "userId": "649f0c4d2c833dce5c7872a3" 
+  "title": "Adding to a User with auth",
+  "author": "Carson Haskell"
 }
