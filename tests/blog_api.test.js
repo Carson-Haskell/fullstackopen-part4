@@ -114,6 +114,9 @@ describe('updating a blog', () => {
     const blogsAtEnd = await helper.blogsInDb();
     const updattedBlog = blogsAtEnd[0];
     expect(updattedBlog.likes).toBe(likes);
+    expect(updattedBlog.title).toBe(blogToUpdate.title);
+    expect(updattedBlog.author).toBe(blogToUpdate.author);
+    expect(updattedBlog.url).toBe(blogToUpdate.url);
   });
 });
 
