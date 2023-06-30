@@ -7,10 +7,16 @@ Content-Type: application/json
 // CREATE NEW BLOG
 POST http://localhost:3003/api/blogs 
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNhcnNvbmhhcyIsImlkIjoiNjQ5ZjBjNGQyYzgzM2RjZTVjNzg3MmEzIiwiaWF0IjoxNjg4MTU3OTQwfQ.NlRZmII61Ei9PTv-G5zOIptklxfjGdqOi7nyJRqo1qw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNhcnNvbmhhcyIsImlkIjoiNjQ5ZjBjNGQyYzgzM2RjZTVjNzg3MmEzIiwiaWF0IjoxNjg4MTU5MDU3fQ.0d8oziHCgp5YUJpZ5WsifC8PfXC6CW4f9ZHypJ3BlKs
 
 {
   "url": "test.com",
-  "title": "Adding to a User with auth",
+  "title": "tbd",
   "author": "Carson Haskell"
 }
+
+###
+// DELETING BLOG
+DELETE http://localhost:3003/api/blogs/649f47443aea268cf21aff84
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImNhcnNvbmhhcyIsImlkIjoiNjQ5ZjBjNGQyYzgzM2RjZTVjNzg3MmEzIiwiaWF0IjoxNjg4MTU5MDU3fQ.0d8oziHCgp5YUJpZ5WsifC8PfXC6CW4f9ZHypJ3BlKs
