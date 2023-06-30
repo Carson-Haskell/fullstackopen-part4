@@ -18,9 +18,8 @@ const errorHandler = (error, req, res, next) => {
   logError(error.message);
 
   if (error.name === 'CastError') {
-    return res.status(400).send({ error: 'malformatted id' });
-  }
-  if (error.name === 'ValidationError') {
+    res.status(400).send({ error: 'malformatted id' });
+  } else if (error.name === 'ValidationError') {
     if (!req.body.username) {
       return res.status(400).send({ error: 'username required' });
     }
@@ -30,9 +29,8 @@ const errorHandler = (error, req, res, next) => {
         .send({ error: 'username must be at least 3 characters long' });
     }
 
-    return res.status(400).send({ error: 'expected `username` to be unique' });
-  }
-  if (error.name === 'JsonWebTokenError') {
+    res.status(400).send({ error: 'expected `username` to be unique' });
+  } else if (error.name === 'JsonWebTokenError') {
     return res.status(400).json({ error: error.message });
   }
 
@@ -41,18 +39,17 @@ const errorHandler = (error, req, res, next) => {
 
 const userExtractor = async (req, res, next) => {
   const authorization = req.get('authorization');
-  let token;
 
   if (authorization && authorization.startsWith('Bearer ')) {
-    token = authorization.replace('Bearer ', '');
+    const token = authorization.replace('Bearer ', '');
+
+    const decodedToken = jwt.verify(token, process.env.SECRET);
+
+    const userId = decodedToken.id.toString();
+    const user = await User.findById(userId);
+
+    req.user = user;
   }
-
-  const decodedToken = jwt.verify(token, process.env.SECRET);
-
-  const userId = decodedToken.id.toString();
-  const user = await User.findById(userId);
-
-  req.user = user;
 
   next();
 };

@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
+const bcrypt = require('bcrypt');
 const app = require('../app');
 
 const api = supertest(app);
 
 const helper = require('./test_helper');
 const Blog = require('../models/blog');
+const User = require('../models/user');
 
 beforeEach(async () => {
   await Blog.deleteMany({});
@@ -14,6 +16,13 @@ beforeEach(async () => {
 
   const blogsToSave = blogObjects.map((blog) => blog.save());
   await Promise.all(blogsToSave);
+
+  await User.deleteMany({});
+
+  const passwordHash = await bcrypt.hash('123', 10);
+  const user = new User({ username: 'root', passwordHash });
+
+  await user.save();
 });
 
 // FETCHING
@@ -38,8 +47,18 @@ describe('when there is initially some blogs saved', () => {
   });
 });
 
+// CREATING
 describe('addition of a new note', () => {
   test('properly stores in database', async () => {
+    const loginCreds = {
+      username: 'root',
+      password: '123',
+    };
+
+    const loginInfo = await api.post('/api/login').send(loginCreds).expect(200);
+
+    const { token } = loginInfo.body;
+
     await api
       .post('/api/blogs')
       .send(helper.dummyBlog)
@@ -79,6 +98,7 @@ describe('addition of a new note', () => {
   });
 });
 
+// DELETING
 describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb();
@@ -95,6 +115,7 @@ describe('deletion of a blog', () => {
   });
 });
 
+// UPDATING
 describe('updating a blog', () => {
   test('updates likes properly with valid id', async () => {
     const blogsAtStart = await helper.blogsInDb();
