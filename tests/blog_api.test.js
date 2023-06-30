@@ -48,7 +48,7 @@ describe('when there is initially some blogs saved', () => {
 });
 
 // CREATING
-describe('addition of a new note', () => {
+describe('addition of a new blog', () => {
   test('properly stores in database', async () => {
     const loginCreds = {
       username: 'root',
@@ -62,6 +62,7 @@ describe('addition of a new note', () => {
     await api
       .post('/api/blogs')
       .send(helper.dummyBlog)
+      .set('Authorization', `Bearer ${token}`)
       .expect(201)
       .expect('Content-Type', /application\/json/);
 
@@ -78,8 +79,18 @@ describe('addition of a new note', () => {
   test('likes property defaults to 0 when not specified', async () => {
     const blogWithoutLikes = { ...helper.dummyBlog, likes: null };
 
+    const loginCreds = {
+      username: 'root',
+      password: '123',
+    };
+
+    const loginInfo = await api.post('/api/login').send(loginCreds).expect(200);
+
+    const { token } = loginInfo.body;
+
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(blogWithoutLikes)
       .expect(201)
       .expect('Content-Type', /application\/json/);
@@ -101,17 +112,37 @@ describe('addition of a new note', () => {
 // DELETING
 describe('deletion of a blog', () => {
   test('succeeds with status code 204 if id is valid', async () => {
-    const blogsAtStart = await helper.blogsInDb();
-    const blogToDelete = blogsAtStart[0];
+    const loginCreds = {
+      username: 'root',
+      password: '123',
+    };
 
-    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+    const loginInfo = await api.post('/api/login').send(loginCreds).expect(200);
+
+    const { token } = loginInfo.body;
+
+    const response = await api
+      .post('/api/blogs')
+      .send(helper.dummyBlog)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(201)
+      .expect('Content-Type', /application\/json/);
+
+    const newBlog = response.body;
+
+    const blogsAtStart = await helper.blogsInDb();
+
+    await api
+      .delete(`/api/blogs/${newBlog.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .expect(204);
 
     const blogsAtEnd = await helper.blogsInDb();
 
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
+    expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
 
     const ids = blogsAtEnd.map((b) => b.id);
-    expect(ids).not.toContain(blogToDelete.id);
+    expect(ids).not.toContain(newBlog.id);
   });
 });
 
