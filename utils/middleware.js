@@ -18,6 +18,18 @@ const errorHandler = (error, req, res, next) => {
   if (error.name === 'CastError') {
     return res.status(400).send({ error: 'malformatted id' });
   }
+  if (error.name === 'ValidationError') {
+    if (!req.body.username) {
+      return res.status(400).send({ error: 'username required' });
+    }
+    if (req.body.username.length < 3) {
+      return res
+        .status(400)
+        .send({ error: 'username must be at least 3 characters long' });
+    }
+
+    return res.status(400).send({ error: 'expected `username` to be unique' });
+  }
 
   return next(error);
 };
